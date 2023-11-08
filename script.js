@@ -1,13 +1,33 @@
 class Planet {
-  constructor() {
-    this.x = 200;
-    this.y = 200;
-    this.radius = 80; // sprites are 80x80, radius of planet if 80
+  constructor(game) {
+    this.game = game;
+    this.x = game.width * 0.5;
+    this.y = game.height * 0.5;
+    this.radius = 80; // sprites are 80x80, radius of planet is 80
+    this.cloudRadius = 100; // the clouds of the planet stick out 20px, but will not count towards sprite collisions
+    this.image = document.getElementById("planet");
   }
   draw(context) {
+    context.drawImage(
+      this.image,
+      this.x - this.cloudRadius,
+      this.y - this.cloudRadius
+    );
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.fill();
+    context.stroke();
+  }
+}
+
+class Game {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
+    this.planet = new Planet(this);
+  }
+  render(context) {
+    this.planet.draw(context);
   }
 }
 
@@ -18,6 +38,7 @@ window.addEventListener("load", function () {
   canvas.height = 800;
   ctx.strokeStyle = "white";
   ctx.lineWidth = 2;
-  const planet = new Planet();
-  planet.draw(ctx);
+  const game = new Game(canvas);
+  game.render(ctx);
+  //   planet.draw(ctx);
 });
