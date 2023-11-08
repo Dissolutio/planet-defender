@@ -60,6 +60,7 @@ window.addEventListener("load", function () {
   */
   requestAnimationFrame(animate);
   function animate() {
+    ctx.clearRect(0, 0, canvas.height, canvas.width);
     game.render(ctx);
     requestAnimationFrame(animate);
   }
