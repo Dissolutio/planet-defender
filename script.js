@@ -65,13 +65,6 @@ class Game {
     this.planet.draw(context);
     this.player.draw(context);
     this.player.update();
-    /* 
-        draws a line from the planet to the mouse
-    */
-    context.beginPath();
-    context.moveTo(this.planet.x, this.planet.y);
-    context.lineTo(this.mouse.x, this.mouse.y);
-    context.stroke();
   }
   calcAim(a, b) {
     const dx = a.x - b.x;
