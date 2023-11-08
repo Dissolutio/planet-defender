@@ -25,9 +25,24 @@ class Game {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.planet = new Planet(this);
+    this.mouse = {
+      x: 0,
+      y: 0,
+    };
+    window.addEventListener("mousemove", (e) => {
+      this.mouse.x = e.offsetX;
+      this.mouse.y = e.offsetY;
+    });
   }
   render(context) {
     this.planet.draw(context);
+    /* 
+        draws a line from the planet to the mouse
+    */
+    context.beginPath();
+    context.moveTo(this.planet.x, this.planet.y);
+    context.lineTo(this.mouse.x, this.mouse.y);
+    context.stroke();
   }
 }
 
@@ -40,5 +55,12 @@ window.addEventListener("load", function () {
   ctx.lineWidth = 2;
   const game = new Game(canvas);
   game.render(ctx);
-  //   planet.draw(ctx);
+  /* 
+    kick off the animation loop for every frame
+  */
+  requestAnimationFrame(animate);
+  function animate() {
+    game.render(ctx);
+    requestAnimationFrame(animate);
+  }
 });
