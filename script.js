@@ -24,6 +24,8 @@ class Game {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
+    // this.width = container.clientWidth;
+    // this.height = container.clientHeight;
     this.planet = new Planet(this);
     this.mouse = {
       x: 0,
@@ -48,9 +50,12 @@ class Game {
 
 window.addEventListener("load", function () {
   const canvas = document.getElementById("canvas1");
+  const container = document.querySelector("#scene-container");
   const ctx = canvas.getContext("2d");
-  canvas.width = 800;
-  canvas.height = 800;
+  //   canvas.width = 800;
+  //   canvas.height = 800;
+  canvas.width = container.clientWidth;
+  canvas.height = container.clientHeight;
   ctx.strokeStyle = "white";
   ctx.lineWidth = 2;
   const game = new Game(canvas);
