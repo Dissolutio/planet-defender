@@ -275,9 +275,12 @@ window.addEventListener("load", function () {
     kick off the animation loop for every frame
   */
   requestAnimationFrame(animate);
-  function animate() {
+  let lastTime = 0;
+  function animate(timeStamp) {
+    const deltaTime = timeStamp - lastTime;
+    lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.height, canvas.width);
-    game.render(ctx);
+    game.render(ctx, deltaTime);
     requestAnimationFrame(animate);
   }
 });
