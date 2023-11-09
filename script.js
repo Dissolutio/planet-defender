@@ -58,7 +58,31 @@ class Player {
     this.angle = Math.atan2(this.aim[3], this.aim[2]);
   }
 }
-
+class Projectile {
+  constructor(game) {
+    this.game = game;
+    this.x;
+    this.y;
+    this.radius = 20;
+    this.free = true;
+  }
+  start() {
+    this.free = false;
+  }
+  reset() {
+    this.free = true;
+  }
+  draw(context) {
+    if (!this.free) {
+      // do not draw object unless it is being used
+    }
+  }
+  update() {
+    if (!this.free) {
+      // do not update object unless it is being used
+    }
+  }
+}
 class Game {
   constructor(canvas) {
     this.canvas = canvas;
