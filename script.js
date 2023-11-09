@@ -97,6 +97,15 @@ class Projectile {
       this.x += this.speedX;
       this.y += this.speedY;
     }
+    // reset if outside visible game area
+    if (
+      this.x < 0 ||
+      this.x > this.game.width ||
+      this.y < 0 ||
+      this.y > this.game.height
+    ) {
+      this.reset();
+    }
   }
 }
 class Game {
