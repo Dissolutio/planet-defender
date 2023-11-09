@@ -57,17 +57,27 @@ class Player {
       (this.game.planet.radius + this.radius) * this.aim[1];
     this.angle = Math.atan2(this.aim[3], this.aim[2]);
   }
+  shoot() {
+    const projectile = this.game.getProjectile();
+    if (projectile) {
+      projectile.start(this.x, this.y);
+    }
+  }
 }
 class Projectile {
   constructor(game) {
     this.game = game;
     this.x;
     this.y;
+    this.speedX = 1;
+    this.speedY = 1;
     this.radius = 20;
     this.free = true;
   }
-  start() {
+  start(x, y) {
     this.free = false;
+    this.x = x;
+    this.y = y;
   }
   reset() {
     this.free = true;
@@ -84,7 +94,8 @@ class Projectile {
   }
   update() {
     if (!this.free) {
-      // do not update object unless it is being used
+      this.x += this.speedX;
+      this.y += this.speedY;
     }
   }
 }
@@ -104,11 +115,15 @@ class Game {
       x: 0,
       y: 0,
     };
-    this.debug = false;
 
     window.addEventListener("mousemove", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
+    });
+    window.addEventListener("mousedown", (e) => {
+      this.mouse.x = e.offsetX;
+      this.mouse.y = e.offsetY;
+      this.player.shoot();
     });
     window.addEventListener("keyup", (e) => {
       if (e.key === "d") {
