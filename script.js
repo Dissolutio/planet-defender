@@ -90,6 +90,11 @@ class Game {
     this.height = this.canvas.height;
     this.planet = new Planet(this);
     this.player = new Player(this);
+    this.debug = false;
+    this.projectilePool = [];
+    this.numberOfProjectiles = 5; // too few and we might run out, too many and we are wasting memory
+    this.createProjectilePool();
+
     this.mouse = {
       x: 0,
       y: 0,
@@ -118,6 +123,18 @@ class Game {
     const aimX = (dx / distance) * -1;
     const aimY = (dy / distance) * -1;
     return [aimX, aimY, dx, dy];
+  }
+  createProjectilePool() {
+    for (let i = 0; i < this.numberOfProjectiles; i++) {
+      this.projectilePool.push(new Projectile(this));
+    }
+  }
+  getProjectile() {
+    for (let i = 0; i < this.projectilePool.length; i++) {
+      if (this.projectilePool[i].free) {
+        return this.projectilePool[i];
+      }
+    }
   }
 }
 
