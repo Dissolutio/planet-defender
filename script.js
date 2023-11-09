@@ -162,11 +162,20 @@ class Enemy {
       this.x += this.speedX;
       this.y += this.speedY;
     }
-    // check collision with enemy planet
+    // check collision with enemy planet / player
     if (
       this.game.calcCollision(this, this.game.planet) ||
       this.game.calcCollision(this, this.game.player)
     ) {
+      this.reset();
+    }
+    // check collision with enemy / projectiles
+    this.game.projectilePool.forEach((p) => {
+      if (!p.free && this.game.calcCollision(this, p)) {
+        this.reset();
+      }
+    });
+    if (this.game.calcCollision(this, this.game.planet)) {
       this.reset();
     }
   }
