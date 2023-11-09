@@ -13,9 +13,12 @@ class Planet {
       this.x - this.cloudRadius,
       this.y - this.cloudRadius
     );
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.stroke();
+    if (this.game.debug) {
+      // draw hit circle around planet
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      context.stroke();
+    }
   }
 }
 
@@ -34,9 +37,13 @@ class Player {
     context.translate(this.x, this.y);
     context.rotate(this.angle);
     context.drawImage(this.image, -this.radius, -this.radius);
-    context.beginPath();
-    context.arc(0, 0, this.radius, 0, Math.PI * 2);
-    context.stroke();
+    if (this.game.debug) {
+      // draw hit circle around player
+      context.beginPath();
+      context.arc(0, 0, this.radius, 0, Math.PI * 2);
+      context.stroke();
+    }
+
     context.restore(); // after we do the rotation, restore canvas state
   }
   update() {
