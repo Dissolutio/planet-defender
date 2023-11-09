@@ -134,10 +134,11 @@ class Enemy {
     // this spawns enemies either along top & bottom, or left & right sides of screen
     if (Math.random() > 0.5) {
       this.x = Math.random() * this.game.width;
-      this.y = Math.random() > 0.5 ? 0 : this.game.height;
+      this.y =
+        Math.random() > 0.5 ? -this.radius : this.game.height + this.radius;
     } else {
-      this.x = Math.random() > 0.5 ? 0 : this.game.width;
-      this.y = Math.random() * this.game.height;
+      this.x = Math.random() > 0.5 ? -this.radius : this.game.width;
+      this.y = Math.random() * this.game.height + this.radius;
     }
 
     const aim = this.game.calcAim(this, this.game.planet);
