@@ -74,7 +74,12 @@ class Projectile {
   }
   draw(context) {
     if (!this.free) {
-      // do not draw object unless it is being used
+      context.save();
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      context.fillStyle = "gold";
+      context.fill();
+      context.restore();
     }
   }
   update() {
@@ -115,6 +120,10 @@ class Game {
     this.planet.draw(context);
     this.player.draw(context);
     this.player.update();
+    this.projectilePool.forEach((projectile) => {
+      projectile.draw(context);
+      projectile.update();
+    });
   }
   calcAim(a, b) {
     const dx = a.x - b.x;
