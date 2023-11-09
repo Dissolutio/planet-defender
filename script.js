@@ -60,7 +60,10 @@ class Player {
   shoot() {
     const projectile = this.game.getProjectile();
     if (projectile) {
-      projectile.start(this.x, this.y);
+      // we adjust the starting point outwards a little so it launches from the tip of the player's ship
+      const startX = this.x + this.radius * this.aim[0];
+      const startY = this.y + this.radius * this.aim[1];
+      projectile.start(startX, startY, this.aim[0], this.aim[1]);
     }
   }
 }
@@ -69,15 +72,18 @@ class Projectile {
     this.game = game;
     this.x;
     this.y;
+    this.radius = 5;
     this.speedX = 1;
     this.speedY = 1;
-    this.radius = 20;
+    this.speedModifier = 5;
     this.free = true;
   }
-  start(x, y) {
+  start(x, y, speedX, speedY) {
     this.free = false;
     this.x = x;
     this.y = y;
+    this.speedX = speedX * this.speedModifier;
+    this.speedY = speedY * this.speedModifier;
   }
   reset() {
     this.free = true;
@@ -117,7 +123,7 @@ class Game {
     this.player = new Player(this);
     this.debug = false;
     this.projectilePool = [];
-    this.numberOfProjectiles = 5; // too few and we might run out, too many and we are wasting memory
+    this.numberOfProjectiles = 20; // too few and we might run out, too many and we are wasting memory
     this.createProjectilePool();
 
     this.mouse = {
@@ -137,6 +143,9 @@ class Game {
     window.addEventListener("keyup", (e) => {
       if (e.key === "d") {
         this.debug = !this.debug;
+      }
+      if (e.key === "1") {
+        this.player.shoot();
       }
     });
   }
