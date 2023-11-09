@@ -131,8 +131,15 @@ class Enemy {
   // start(x, y, speedX, speedY) {
   start() {
     this.free = false;
-    this.x = Math.random() * this.game.width;
-    this.y = Math.random() * this.game.height;
+    // this spawns enemies either along top & bottom, or left & right sides of screen
+    if (Math.random() > 0.5) {
+      this.x = Math.random() * this.game.width;
+      this.y = Math.random() > 0.5 ? 0 : this.game.height;
+    } else {
+      this.x = Math.random() > 0.5 ? 0 : this.game.width;
+      this.y = Math.random() * this.game.height;
+    }
+
     const aim = this.game.calcAim(this, this.game.planet);
     this.speedX = aim[0];
     this.speedY = aim[1];
