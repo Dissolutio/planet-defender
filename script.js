@@ -173,6 +173,7 @@ class Enemy {
     // check collision with enemy / projectiles
     this.game.projectilePool.forEach((p) => {
       if (!p.free && this.game.calcCollision(this, p)) {
+        projectile.reset();
         this.reset();
       }
     });
