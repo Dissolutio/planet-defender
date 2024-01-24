@@ -1,3 +1,5 @@
+const ASTEROID_SPRITE_ROWS = 4;
+
 class Planet {
   constructor(game) {
     this.game = game;
@@ -131,6 +133,10 @@ class Enemy {
   // start(x, y, speedX, speedY) {
   start() {
     this.free = false;
+    this.frameX = 0;
+    this.lives = this.maxLives;
+    // randomize the sprite on re-use of object
+    this.frameY = Math.floor(Math.random() * ASTEROID_SPRITE_ROWS);
     // this spawns enemies either along top & bottom, or left & right sides of screen
     if (Math.random() > 0.5) {
       this.x = Math.random() * this.game.width;
@@ -145,20 +151,38 @@ class Enemy {
     this.speedX = aim[0];
     this.speedY = aim[1];
   }
+  hit(damage) {
+    this.lives -= damage;
+  }
   reset() {
     this.free = true;
   }
   draw(context) {
     if (!this.free) {
-      //   context.save();
-      context.beginPath();
-      context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      //   context.strokeStyle = "white";
-      context.stroke();
-      //   context.restore();
+      // draw image
+      context.drawImage(
+        this.image,
+        this.frameX * this.width,
+        this.frameY * this.height,
+        this.width,
+        this.height,
+        this.x - this.radius,
+        this.y - this.radius,
+        this.width,
+        this.height
+      );
+      if (this.game.debug) {
+        // draw collision circles in debug mode
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        context.stroke();
+      }
     }
   }
   update() {
+    if (this.frameX > this.maxFrame) {
+      this.reset();
+    }
     if (!this.free) {
       this.x += this.speedX;
       this.y += this.speedY;
@@ -171,18 +195,28 @@ class Enemy {
       this.reset();
     }
     // check collision with enemy / projectiles
-    this.game.projectilePool.forEach((p) => {
-      if (!p.free && this.game.calcCollision(this, p)) {
+    this.game.projectilePool.forEach((projectile) => {
+      if (!projectile.free && this.game.calcCollision(this, projectile)) {
         projectile.reset();
-        this.reset();
+        this.hit(1);
       }
     });
-    if (this.game.calcCollision(this, this.game.planet)) {
-      this.reset();
+    if (this.lives < 1) {
+      this.frameX++;
     }
   }
 }
-
+class Asteroid extends Enemy {
+  constructor(game) {
+    super(game);
+    this.image = document.getElementById("asteroid");
+    this.frameX = 0;
+    this.frameY = Math.floor(Math.random() * ASTEROID_SPRITE_ROWS);
+    this.maxFrame = 7;
+    this.lives = 1;
+    this.maxLives = 1;
+  }
+}
 class Game {
   constructor(canvas) {
     this.canvas = canvas;
@@ -198,9 +232,12 @@ class Game {
     this.enemyPool = [];
     this.numberOfEnemies = 20; // too few and we might run out, too many and we are wasting memory
     this.createEnemyPool();
+
+    // start 1 enemy
     this.enemyPool[0].start();
+
     this.enemyTimer = 0;
-    this.enemyInterval = 1000;
+    this.enemyInterval = 1700;
 
     this.mouse = {
       x: 0,
@@ -276,7 +313,7 @@ class Game {
   }
   createEnemyPool() {
     for (let i = 0; i < this.numberOfEnemies; i++) {
-      this.enemyPool.push(new Enemy(this));
+      this.enemyPool.push(new Asteroid(this));
     }
   }
   getEnemy() {
